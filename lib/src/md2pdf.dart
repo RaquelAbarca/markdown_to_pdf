@@ -74,7 +74,8 @@ class Style {
         fontWeight: weight,
         fontSize: height,
         color: color,
-        fontStyle: fontStyle);
+        fontStyle: fontStyle,
+        decoration: textDecoration);
   }
 }
 
