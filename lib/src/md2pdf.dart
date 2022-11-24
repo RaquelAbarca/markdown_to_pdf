@@ -151,6 +151,10 @@ class Styler {
 
   pw.TextSpan inlineChildren(Node e, Style? s, [Style? m]) {
     style.push(s);
+
+    if (m != null) {
+      style.push(m);
+    }
     List<pw.InlineSpan> r = [];
     for (var o in e.nodes) {
       var ch = format(o);
@@ -177,7 +181,7 @@ class Styler {
           // spans can contain text or other spans
           case "span":
           case "code":
-            return Chunk(text: inlineChildren(e, Style()));
+          //return Chunk(widget: [pw.Table(pw.row(widgetChildren(e, Style())))]);
           case "hr":
             return Chunk(widget: [pw.Divider()]);
           case "li":
@@ -194,10 +198,10 @@ class Styler {
                 text: inlineChildren(e, Style(fontStyle: pw.FontStyle.italic)));
           case "del":
             return Chunk(
-                text: inlineChildren(
-                    e, Style(textDecoration: pw.TextDecoration.lineThrough)));
+                text: inlineChildren(e, Style(color: PdfColors.black), Style(textDecoration: pw.TextDecoration.lineThrough)));
           case "a":
-            return Chunk(pw.UrlLink(child: "hola", destination: "sdsd"));          // case "img":
+          return Chunk(widget: [pw.UrlLink(child: pw.Text("Text links"),destination: "https://datagrove.com")]);
+          // case "img":
           //   return Chunk(widget: [pw.Image()]);
           // blocks can contain blocks or spans
           case "h1":
