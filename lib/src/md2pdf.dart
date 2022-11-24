@@ -27,25 +27,6 @@ class ComputedStyle {
   }
 }
 
-// class _UrlText extends pw.StatelessWidget {
-//   _UrlText(this.text, this.url);
-
-//   final String text;
-//   final String url;
-
-//   @override
-//   pw.Widget build(pw.Context context) {
-//     return pw.UrlLink(
-//       destination: url,
-//       child: pw.Text(text,
-//           style: const pw.TextStyle(
-//             decoration: pw.TextDecoration.underline,
-//             color: PdfColors.blue,
-//           )),
-//     );
-//   }
-// }
-
 // you will need to add more attributes here, just follow the pattern.
 class Style {
   pw.FontWeight? weight;
@@ -53,12 +34,14 @@ class Style {
   pw.FontStyle? fontStyle;
   pw.UrlLink? urlLink;
   p.PdfColor? color;
+  pw.Container? container;
   pw.TextDecoration? textDecoration;
   Style(
       {this.weight,
       this.height,
       this.fontStyle,
       this.color,
+      this.container,
       this.textDecoration});
 
   Style merge(Style s) {
@@ -66,6 +49,7 @@ class Style {
     height ??= s.height;
     fontStyle ??= s.fontStyle;
     color ??= s.color;
+    container ??= s.container;
     textDecoration ??= s.textDecoration;
     return this;
   }
@@ -193,14 +177,23 @@ class Styler {
           case "strong":
             return Chunk(
                 text: inlineChildren(e, Style(weight: pw.FontWeight.bold)));
+          case "blockquote":
+            return Chunk(
+                text: inlineChildren(e, Style(container: pw.Container(color: PdfColors.blue))));
           case "em":
             return Chunk(
                 text: inlineChildren(e, Style(fontStyle: pw.FontStyle.italic)));
           case "del":
             return Chunk(
-                text: inlineChildren(e, Style(color: PdfColors.black), Style(textDecoration: pw.TextDecoration.lineThrough)));
+                text: inlineChildren(e, Style(color: PdfColors.black),
+                    Style(textDecoration: pw.TextDecoration.lineThrough)));
           case "a":
-          return Chunk(widget: [pw.UrlLink(child: pw.Text("Text links"),destination: "https://datagrove.com")]);
+            var linkname = inlineChildren(e, Style()).toString();
+            return Chunk(widget: [
+              pw.UrlLink(
+                  child: pw.Text(linkname),
+                  destination: "https://datagrove.com")
+            ]);
           // case "img":
           //   return Chunk(widget: [pw.Image()]);
           // blocks can contain blocks or spans
