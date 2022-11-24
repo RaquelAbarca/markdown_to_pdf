@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:mirrors';
 import 'package:html/parser.dart';
 import 'package:html/dom.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -26,24 +27,24 @@ class ComputedStyle {
   }
 }
 
-class _UrlText extends pw.StatelessWidget {
-  _UrlText(this.text, this.url);
+// class _UrlText extends pw.StatelessWidget {
+//   _UrlText(this.text, this.url);
 
-  final String text;
-  final String url;
+//   final String text;
+//   final String url;
 
-  @override
-  pw.Widget build(pw.Context context) {
-    return pw.UrlLink(
-      destination: url,
-      child: pw.Text(text,
-          style: const pw.TextStyle(
-            decoration: pw.TextDecoration.underline,
-            color: PdfColors.blue,
-          )),
-    );
-  }
-}
+//   @override
+//   pw.Widget build(pw.Context context) {
+//     return pw.UrlLink(
+//       destination: url,
+//       child: pw.Text(text,
+//           style: const pw.TextStyle(
+//             decoration: pw.TextDecoration.underline,
+//             color: PdfColors.blue,
+//           )),
+//     );
+//   }
+// }
 
 // you will need to add more attributes here, just follow the pattern.
 class Style {
@@ -148,7 +149,7 @@ class Styler {
     return r;
   }
 
-  pw.TextSpan inlineChildren(Node e, Style? s) {
+  pw.TextSpan inlineChildren(Node e, Style? s, [Style? m]) {
     style.push(s);
     List<pw.InlineSpan> r = [];
     for (var o in e.nodes) {
@@ -161,12 +162,7 @@ class Styler {
     return pw.TextSpan(children: r);
   }
 
-  pw.TextStyle? s = null;
-  pw.Divider? f = null;
-
-  // I only implmenented necessary ones, but follow the pattern
-
-  int i = 0;
+  // I only implmenented necessary ones, but follow the patternZ
 
   Chunk format(Node e) {
     switch (e.nodeType) {
@@ -198,11 +194,11 @@ class Styler {
                 text: inlineChildren(e, Style(fontStyle: pw.FontStyle.italic)));
           case "del":
             return Chunk(
-                text: inlineChildren(e, Style(textDecoration: pw.TextDecoration.lineThrough)));
+                text: inlineChildren(
+                    e, Style(textDecoration: pw.TextDecoration.lineThrough)));
           case "a":
-            return Chunk(
-                text: inlineChildren(e, Style(color: PdfColors.green)));
-
+            return Chunk(pw.UrlLink(child: "hola", destination: "sdsd"));          // case "img":
+          //   return Chunk(widget: [pw.Image()]);
           // blocks can contain blocks or spans
           case "h1":
             return Chunk(
