@@ -27,6 +27,25 @@ class ComputedStyle {
   }
 }
 
+class _UrlText extends pw.StatelessWidget {
+  _UrlText(this.text, this.url);
+
+  final String text;
+  final String url;
+
+  @override
+  pw.Widget build(pw.Context context) {
+    return pw.UrlLink(
+      destination: url,
+      child: pw.Text(text,
+          style: const pw.TextStyle(
+            decoration: pw.TextDecoration.underline,
+            color: PdfColors.blue,
+          )),
+    );
+  }
+}
+
 // you will need to add more attributes here, just follow the pattern.
 class Style {
   pw.FontWeight? weight;
@@ -188,11 +207,14 @@ class Styler {
                 text: inlineChildren(e, Style(color: PdfColors.black),
                     Style(textDecoration: pw.TextDecoration.lineThrough)));
           case "a":
-            var linkname = inlineChildren(e, Style()).toString();
             return Chunk(widget: [
               pw.UrlLink(
-                  child: pw.Text(e.innerHtml),
-                  destination: (e.outerHtml))
+                  child: pw.Text((e.innerHtml), 
+                    style: const pw.TextStyle(
+                      color: PdfColors.blue,
+                      decoration: pw.TextDecoration.underline,
+                    )),
+                  destination: (e.attributes["href"]!))
             ]);
           // case "img":
           //   return Chunk(widget: [pw.Image()]);
