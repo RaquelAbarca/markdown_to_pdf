@@ -40,6 +40,7 @@ class _UrlText extends pw.StatelessWidget {
       child: pw.Text(text,
           style: const pw.TextStyle(
             decoration: pw.TextDecoration.underline,
+            decorationColor: PdfColors.blue,
             color: PdfColors.blue,
           )),
     );
@@ -207,15 +208,7 @@ class Styler {
                 text: inlineChildren(e, Style(color: PdfColors.black),
                     Style(textDecoration: pw.TextDecoration.lineThrough)));
           case "a":
-            return Chunk(widget: [
-              pw.UrlLink(
-                  child: pw.Text((e.innerHtml), 
-                    style: const pw.TextStyle(
-                      color: PdfColors.blue,
-                      decoration: pw.TextDecoration.underline,
-                    )),
-                  destination: (e.attributes["href"]!))
-            ]);
+            return Chunk(widget: [_UrlText((e.innerHtml), (e.attributes["href"]!))]);
           // case "img":
           //   return Chunk(widget: [pw.Image()]);
           // blocks can contain blocks or spans
