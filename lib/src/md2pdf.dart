@@ -49,6 +49,7 @@ class _UrlText extends pw.StatelessWidget {
 
 // you will need to add more attributes here, just follow the pattern.
 class Style {
+  pw.Font? font;
   pw.FontWeight? weight;
   double? height;
   pw.FontStyle? fontStyle;
@@ -57,7 +58,8 @@ class Style {
   pw.Container? container;
   pw.TextDecoration? textDecoration;
   Style(
-      {this.weight,
+      {this.font,
+      this.weight,
       this.height,
       this.fontStyle,
       this.color,
@@ -65,6 +67,7 @@ class Style {
       this.textDecoration});
 
   Style merge(Style s) {
+    font ??= s.font;
     weight ??= s.weight;
     height ??= s.height;
     fontStyle ??= s.fontStyle;
@@ -76,6 +79,7 @@ class Style {
 
   pw.TextStyle style() {
     return pw.TextStyle(
+        font: font,
         fontWeight: weight,
         fontSize: height,
         color: color,
@@ -185,7 +189,8 @@ class Styler {
           // spans can contain text or other spans
           case "span":
           case "code":
-          //return Chunk(widget: [pw.Table(pw.row(widgetChildren(e, Style())))]);
+          return Chunk(widget: widgetChildren(
+                    e, Style(font: pw.Font.courier())));
           case "hr":
             return Chunk(widget: [pw.Divider()]);
           case "li":
