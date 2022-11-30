@@ -7,6 +7,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:markdown/markdown.dart' as md;
 import 'package:pdf/pdf.dart' as p;
 import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart';
 
 // computed style is a stack, each time we encounter an element like <p>... we push its style onto the stack, then pop it off at </p>
 // the top of the stack merges all of the styles of the parents.
@@ -189,8 +190,15 @@ class Styler {
           // spans can contain text or other spans
           case "span":
           case "code":
-          return Chunk(widget: widgetChildren(
-                    e, Style(font: pw.Font.courier())));
+            Chunk(widget: widgetChildren(e, Style(font: pw.Font.courier())));
+            return Chunk(widget: [
+              pw.Container(
+                  child: pw.Text(e.text),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      color: PdfColors.grey200))
+            ]);
           case "hr":
             return Chunk(widget: [pw.Divider()]);
           case "li":
@@ -203,8 +211,9 @@ class Styler {
             return Chunk(
                 text: inlineChildren(e, Style(weight: pw.FontWeight.bold)));
           case "blockquote":
-            return Chunk(
-                text: inlineChildren(e, Style(container: pw.Container(color: PdfColors.blue))));
+          // return Chunk(
+          //     text: inlineChildren(
+          //         e, Style(container: pw.Container(color: PdfColors.blue))));
           case "em":
             return Chunk(
                 text: inlineChildren(e, Style(fontStyle: pw.FontStyle.italic)));
@@ -213,9 +222,10 @@ class Styler {
                 text: inlineChildren(e, Style(color: PdfColors.black),
                     Style(textDecoration: pw.TextDecoration.lineThrough)));
           case "a":
-            return Chunk(widget: [_UrlText((e.innerHtml), (e.attributes["href"]!))]);
-          // case "img":
-          //   return Chunk(widget: [pw.Image()]);
+            return Chunk(
+                widget: [_UrlText((e.innerHtml), (e.attributes["href"]!))]);
+          //case "img":
+          //return Chunk(widget: [pw.MemoryImage((await rootBundle.load('assets/profile.jpg')).buffer.asUint8List())]);
           // blocks can contain blocks or spans
           case "h1":
             return Chunk(
