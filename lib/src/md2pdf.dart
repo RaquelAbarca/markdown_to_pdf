@@ -188,17 +188,6 @@ class Styler {
         switch (e.localName) {
           // SPANS
           // spans can contain text or other spans
-          case "span":
-          case "code":
-            Chunk(widget: widgetChildren(e, Style(font: pw.Font.courier())));
-            return Chunk(widget: [
-              pw.Container(
-                  child: pw.Text(e.text),
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      color: PdfColors.grey200))
-            ]);
           case "hr":
             return Chunk(widget: [pw.Divider()]);
           case "li":
@@ -214,6 +203,22 @@ class Styler {
           // return Chunk(
           //     text: inlineChildren(
           //         e, Style(container: pw.Container(color: PdfColors.blue))));
+          case "span":
+            return Chunk(text: inlineChildren(e, Style()));
+          case "code":
+            return Chunk(
+                text: inlineChildren(e, Style(font: pw.Font.courier())));
+          case "pre":
+            return Chunk(widget: [
+              pw.Container(
+                  child: pw.Row(
+                      children:
+                          widgetChildren(e, Style(font: pw.Font.courier()))),
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      color: PdfColors.grey200))
+            ]);
           case "em":
             return Chunk(
                 text: inlineChildren(e, Style(fontStyle: pw.FontStyle.italic)));
