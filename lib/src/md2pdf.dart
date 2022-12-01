@@ -8,9 +8,12 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:pdf/pdf.dart' as p;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
+import 'package:highlight/highlight.dart' show highlight;
+import 'package:highlight/languages/dart.dart';
 
 // computed style is a stack, each time we encounter an element like <p>... we push its style onto the stack, then pop it off at </p>
 // the top of the stack merges all of the styles of the parents.
+
 class ComputedStyle {
   List<Style> stack = [Style()];
   push(Style? s) {
@@ -200,14 +203,26 @@ class Styler {
             return Chunk(
                 text: inlineChildren(e, Style(weight: pw.FontWeight.bold)));
           case "blockquote":
-          // return Chunk(
-          //     text: inlineChildren(
-          //         e, Style(container: pw.Container(color: PdfColors.blue))));
+            return Chunk(text: inlineChildren(e, Style()));
           case "span":
             return Chunk(text: inlineChildren(e, Style()));
           case "code":
+
+            //   var source = '''main() {
+            //   print("Hello, World!");
+            // }
+            // ''';
+
+            //   highlight.registerLanguage('dart', dart);
+
+            //   var result = highlight.parse(source, language: 'dart');
+            //   var html = result.toHtml();
+            //   print(html); // HTML string
+          
             return Chunk(
-                text: inlineChildren(e, Style(font: pw.Font.courier())));
+                widget: [pw.Wrap(spacing: 5, children: [pw.Container(child: pw.Column(children: widgetChildren(e, Style(font: pw.Font.courier()))),decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      color: PdfColors.grey200))])]);
           case "pre":
             return Chunk(widget: [
               pw.Container(
